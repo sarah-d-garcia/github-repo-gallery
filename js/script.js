@@ -1,19 +1,19 @@
 //-----Global Variables---------------------------------------
 
 //div were porfile info will appear
-const overview = document.querySelector(".overview");
-
+    const overview = document.querySelector(".overview");
 //my github username 
-const username = "sarah-d-garcia";
-
+    const username = "sarah-d-garcia";
 //Select unordered list to display the repos
-const repoList =  document.querySelector(".repo-list");
-
+    const repoList =  document.querySelector(".repo-list");
 //Selects class where all reop information appears
-const allReposContainer = document.querySelector(".repos");
-
+    const allReposContainer = document.querySelector(".repos");
 //selects class where indivual repo data will appear
-const repoData = document.querySelector(".repo-data");
+    const repoData = document.querySelector(".repo-data");
+//selets the back to repo button
+    const viewReposButton = document.querySelector(".view-repos");
+//selects the input for searh by name
+    const filterInput = document.querySelector(".filter-repos");
 
 
 //-----async function to get my data-----------------------------
@@ -56,6 +56,8 @@ const gitUserRepos = async function () {
 
 //Function to display the repos
 const displayRepos = function (repos) {
+    filterInput.classList.remove("hide");
+     
     for (const repo of repos) {
       const repoItem = document.createElement("li");
       repoItem.classList.add("repo");
@@ -97,13 +99,38 @@ const displayRepoInfo = function (repoInfo, languages) {
     repoData.innerHTML = "";
     repoData.classList.remove("hide");
     allReposContainer.classList.add("hide");
+    viewReposButton.classList.remove("hide");
+
     const div = document.createElement("div");
     div.innerHTML = `
       <h3>Name: ${repoInfo.name}</h3>
       <p>Description: ${repoInfo.description}</p>
       <p>Default Branch: ${repoInfo.default_branch}</p>
       <p>Languages: ${languages.join(", ")}</p>
-      <a class="visit" href="${repoInfo.html_url}" target="_blank" rel="noreferrer noopener">View Repo on GitHub!</a>
-    `;
+      <a class="visit" href="${repoInfo.html_url}" target="_blank" rel="noreferrer noopener">View Repo on GitHub!</a>`;
     repoData.append(div);
-  };
+};
+
+
+//Back button click event
+viewReposButton.addEventListener("click", function () {
+    allReposContainer.classList.remove("hide");
+    repoData.classList.add("hide");
+    viewReposButton.classList.add("hide");
+});
+
+//Create a search function
+filterInput.addEventListener("input", function (e) {
+    const searchText = e.target.value;
+    const repos = document.querySelectorAll(".repo");
+    const searchLowerText = searchText.toLowerCase();
+ 
+    for (const repo of repos) {
+      const repoLowerText = repo.innerText.toLowerCase();
+      if (repoLowerText.includes(searchLowerText)) {
+        repo.classList.remove("hide");
+      } else {
+        repo.classList.add("hide");
+      }
+    }
+  });
